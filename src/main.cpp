@@ -1,10 +1,15 @@
 #include "vec3.hpp"
 #include "color.hpp"
 #include "ray.hpp"
+#include "sphere.hpp"
 #include <iostream>
 #include <algorithm>
 
 Color ray_color(const Ray& r) {
+    Sphere sphere(Point3(0, 0, -1), 0.5);
+    if (sphere.hit(r)) {
+        return Color(1, 0, 0);
+    }
     const Vec3 unit_direction = unit_vector(r.direction());
     const auto a = 0.5*(unit_direction.y() + 1.0);
     return (1.0-a)*Color(1.0, 1.0, 1.0) + a*Color(0.5, 0.7, 1.0);
@@ -36,7 +41,6 @@ int main() {
                                      - viewport_u/2 - viewport_v/2;
     const auto pixel00_loc = viewport_upper_left + 0.5 * (pixel_delta_u + pixel_delta_v);
 
-    // Render
     std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
 
     for (int j = 0; j < image_height; ++j) {
